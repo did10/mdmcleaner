@@ -68,9 +68,9 @@ class config_object(object):
 	def read_configs(self, args):
 		"""
 		Reads the config files in hierarchical order (first global, then local), with the later configs always overriding the previous in case of conflicts
-		Config files must be tab-seperated text files (may be compressed though), with setting names in the first column, and the corresponding setting value(s) in subsequent columns.
+		Config files must be tab-seperated text files (may be compressed though), with setting keys in the first column, and the corresponding setting value(s) in subsequent columns.
 		Setting values are always read as lists (except "threads" which is read as integer)
-		Unknown setting names will just be ignored. However, comments should optimally be marked with "#"
+		Unknown setting keys will just be ignored. However, comments should optimally be marked with "#"
 		"""
 		import os
 		self.settings["blacklistfile"] = []
