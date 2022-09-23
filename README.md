@@ -14,7 +14,7 @@ It is based on the GTDB taxonomic system and uses GTDB representative genomes, a
 - aragorn v 1.2.38+ (detecting tRNA genes)
 - prodigal v 2.6.3 (ORF/CDS-prediction)
 
-This repository is hosted at [github]( https://github.com/KIT-IBG-5/mdmcleaner) and mirrored at [gitlab](https://git.scc.kit.edu/ww5070/mdmcleaner).
+This repository is hosted at [github]( https://github.com/KIT-IBG-5/mdmcleaner). The mirrore at [gitlab](https://git.scc.kit.edu/ww5070/mdmcleaner) is deprecated.
 
 ## Installation:
 The MDMcleaner is now installable via **pip** (without dependencies), and **Bioconda**. In case of pip, all dependencies listed above need to be installed seperately.
