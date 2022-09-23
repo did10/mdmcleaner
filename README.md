@@ -48,8 +48,8 @@ the settings that can be specified/adjusted in the config files are:
 - location of barrnap binaries (default is simply "barrnap", which assumes it is present in PATH)
 - location of aragorn binaries (default is simply "blastp", which assumes it is present in PATH)
 
-To create a local config file in the current working directory, simply use ```mdmcleaner set_configs -s local [SETTING_ARGUMENTS]```
-This file can be moved and copied and will be automatically recognized if present in the current working directory when running MDMcleaner. Alternative the path to a local config file can be passed to mdmcleaner via the "-c" argument of the "clean" and "makedb" workflows.
+To create a local config file in the current working directory, simply use ```mdmcleaner set_configs -s local [SETTING_ARGUMENTS]```.
+The generated file can be moved and copied and will be automatically recognized if present in the current working directory when running MDMcleaner. Alternative the path to a local config file can be passed to mdmcleaner via the "-c" argument of the "clean" and "makedb" workflows.
 
 ## overview of MDMcleaner commands
 A list of mdmcleaner commands is returned when invoking the help function of MCMcleaner as follows: ```mdmcleaner -h```. Each command has it's own help function that can be invoked with ```mdmcleaner <COMMAND> -h```. The available commands are:
@@ -88,7 +88,7 @@ optional arguments:
 ## Downloading and creating the reference database
 The reference database is created by running ```mdmcleaner.py makedb```. This downloads the most recent datasets from GTDB, RefSeq and Silva and processes them into the format used by MDMcleaner, ensuring that users can access the newest reference data independently of our ability to keep our database current. The download and processing may take a long time (>13h at 100 Mbit/s), but can be resumed from the last checkpoint, simply by running it again if aborted.
 
-Alternatively you can use the ready made database used during the work on the mdmcleaner publication. This has been deposited at zenodo for reproducability reasons. You find and download it at [this link](https://zenodo.org/record/5698995#.YkylqjVCRhE), or use the ```--get_pub_data``` argument of ```mdmcleaner.py makedb```
+Alternatively you can use the ready made database used during the work on the mdmcleaner publication. This has been deposited at zenodo for reproducibility reasons. You can find and download it at [this link](https://zenodo.org/record/5698995#.YkylqjVCRhE), or use the ```--get_pub_data``` argument of ```mdmcleaner.py makedb```
 
 **Remember to add the location of the database directory to a config file!** Preferrably to the global configuration file by running ```mdmcleaner.py set_configs --db_basedir <path/to/databasefolder>``` 
 If you specify the target database directory in a config file, you do not need to use the ```-o``` option of makedb (instead the target folder will be automatically read from the configs file)
@@ -110,7 +110,7 @@ optional arguments:
 ```
 
 ## Processing MAGs and SAGs
-To process MAGs and SAGs, simply use the "clean" function of MDMcleaner. If you have multiple genomes, specify them all at once instead of calling MDMcleaner individually for each genome. This apeeds up processing time by allowing to reuse of database objects without needing to reinitialize them for every query genome.
+To process MAGs and SAGs, simply use the "clean" function of MDMcleaner. If you have multiple genomes, specify them all at once instead of calling MDMcleaner individually for each genome. This reduces processing time by allowing the reuse of database objects without needing to reinitialize them for every query genome.
 For safety reasons the number of threads used is set to 1 by default. However many steps of the MDMcleaner pipeline can profit from using multiple threads. Remember to specify as many threads as you can safely use on your system.
 
 For each genome, intermediary results are stored in a seperate subfolder in "mdmcleaner_results". Delete them only when you are finished, as these allow resuming or rerunning analyses without having to redo all analyses from scratch...
@@ -146,7 +146,7 @@ optional arguments:
 ```
 
 ## OUTPUT FILES
-Running the ```clean``` option of MDMcleaner.py will create a mdmcleaner_results folder in the current orking directory. Individual results for each genome are saved in individual subfolders of "mdmcleaner_results". This includes a detailed report on the individual contig classifications, a input-table for vizualization with KRONA and (optionally) filtered contig fastas, divided into the four categories "keep", "evaluate_low", "evaluate_high" and "delete":
+Running the ```clean``` option of MDMcleaner.py will create a mdmcleaner_results folder in the current working directory. Individual results for each genome are saved in individual subfolders of "mdmcleaner_results". This includes a detailed report on the individual contig classifications, an input-table for vizualization with KRONA and (optionally) filtered contig fastas, divided into the four categories "keep", "evaluate_low", "evaluate_high" and "delete":
 #### individual output files per genome:
 - fullcontiginfos_beforecleanup.tsv --> a tab seperated table with details for each contig
 - \<genome-name\>_rRNA_lsu_rRNA.fasta --> 23s rRNA genes
