@@ -1,7 +1,7 @@
 # MDMcleaner
 ## A pipeline for the assessment, classification and refinement of microbial dark matter SAGs and MAGs
 MDMcleaner is a reference-DB contamination aware pipeline for reliable contig classification of metagenome assembled (MAG) and single-cell amplified (SAG) genomes.
-It is based on the GTDB taxonomic system and uses GTDB representative genomes, as well as SILVA SSU and LSU and RefSeq eukaryotic and viral datasets as references. Classification is based on a "least common ancestor" (LCA) approach, that is implemented in a way that can recognize potential contaminants not only in the analyzed genome, but also in the underlying reference datasets. Furthermore each contig is classified only up to taxlevels that are actually supported by the corresponding alignment identities, thereby avoiding overclassification for organisms that are underrepresented in the reference database.
+It is based on the GTDB taxonomic system and uses GTDB representative genomes, as well as SILVA SSU and LSU and RefSeq eukaryotic and viral datasets as references. Classification is based on a "least common ancestor" (LCA) approach, that is implemented in a way that can recognize potential contaminants not only in the analyzed genome, but also in the underlying reference datasets. Furthermore, each contig is classified only up to taxlevels that are actually supported by the corresponding alignment identities, thereby avoiding overclassification for organisms that are underrepresented in the reference database.
 
 ## Dependencies:
 - python 3.7+
@@ -17,7 +17,7 @@ It is based on the GTDB taxonomic system and uses GTDB representative genomes, a
 This repository is hosted at [github]( https://github.com/KIT-IBG-5/mdmcleaner). The mirrore at [gitlab](https://git.scc.kit.edu/ww5070/mdmcleaner) is deprecated.
 
 ## Installation:
-The MDMcleaner is now installable via **pip** (without dependencies), and **Bioconda**. In case of pip, all dependencies listed above need to be installed seperately.
+The MDMcleaner is now installable via **pip** (without dependencies), and **Bioconda**. In case of pip, all dependencies listed above need to be installed separately.
 
 to install via pip:
 [![PyPI version](https://badge.fury.io/py/mdmcleaner.svg)](https://badge.fury.io/py/mdmcleaner)
@@ -35,7 +35,7 @@ to install directly from this repository: [![GitHub version](https://badge.fury.
  - install from local wheel file: ```pip install dist/*.whl```
 
 ## Configuration
-Several options can be passed directly as commandline arguments (see usage below), but basic settings, such as database location, should be provided in the form of ```mdmcleaner.config``` config files. The pipeline distinguishes between global (system/environment-wide settings) and local (individual) config files.
+Several options can be passed directly as command line arguments (see usage below), but basic settings, such as database location, should be provided in the form of ```mdmcleaner.config``` config files. The pipeline distinguishes between global (system/environment-wide settings) and local (individual) config files.
 
 The hierarchy is as follows:
  - command line arguments override global and local setting
@@ -49,10 +49,10 @@ the settings that can be specified/adjusted in the config files are:
 - location of aragorn binaries (default is simply "blastp", which assumes it is present in PATH)
 
 To create a local config file in the current working directory, simply use ```mdmcleaner set_configs -s local [SETTING_ARGUMENTS]```.
-The generated file can be moved and copied and will be automatically recognized if present in the current working directory when running MDMcleaner. Alternative the path to a local config file can be passed to mdmcleaner via the "-c" argument of the "clean" and "makedb" workflows.
+The generated file can be moved and copied and will be automatically recognized if present in the current working directory when running MDMcleaner. Alternatively the path to a local config file can be passed to mdmcleaner via the "-c" argument of the "clean" and "makedb" workflows.
 
-## overview of MDMcleaner commands
-A list of mdmcleaner commands is returned when invoking the help function of MCMcleaner as follows: ```mdmcleaner -h```. Each command has it's own help function that can be invoked with ```mdmcleaner <COMMAND> -h```. The available commands are:
+## Overview of MDMcleaner commands
+A list of mdmcleaner commands is returned when invoking the help function of MCMcleaner as follows: ```mdmcleaner -h```. Each command has its own help function that can be invoked with ```mdmcleaner <COMMAND> -h```. The available commands are:
  - **set_configs** can be used to change global or local settings. Will modify or create 'mdmcleaner.config'-files
  - **show_configs** lists the currently applicable MDMcleaner settings/configurations
  - **makedb** downloads and processes reference data into a MDMclenaner reference database. May have a LONG run-time but can be aborted and resumed
@@ -88,9 +88,9 @@ optional arguments:
 ## Downloading and creating the reference database
 The reference database is created by running ```mdmcleaner.py makedb```. This downloads the most recent datasets from GTDB, RefSeq and Silva and processes them into the format used by MDMcleaner, ensuring that users can access the newest reference data independently of our ability to keep our database current. The download and processing may take a long time (>13h at 100 Mbit/s), but can be resumed from the last checkpoint, simply by running it again if aborted.
 
-Alternatively you can use the ready made database used during the work on the mdmcleaner publication. This has been deposited at zenodo for reproducibility reasons. You can find and download it at [this link](https://zenodo.org/record/5698995#.YkylqjVCRhE), or use the ```--get_pub_data``` argument of ```mdmcleaner.py makedb```
+Alternatively you can use the ready-made database used during the work on the mdmcleaner publication. This has been deposited at zenodo for reproducibility reasons. You can find and download it at [this link](https://zenodo.org/record/5698995#.YkylqjVCRhE), or use the ```--get_pub_data``` argument of ```mdmcleaner.py makedb```
 
-**Remember to add the location of the database directory to a config file!** Preferrably to the global configuration file by running ```mdmcleaner.py set_configs --db_basedir <path/to/databasefolder>``` 
+**Remember to add the location of the database directory to a config file!** Preferably to the global configuration file by running ```mdmcleaner.py set_configs --db_basedir <path/to/databasefolder>``` 
 If you specify the target database directory in a config file, you do not need to use the ```-o``` option of makedb (instead the target folder will be automatically read from the configs file)
 
 #### usage of ```mdmcleaner makedb```:
@@ -113,7 +113,7 @@ optional arguments:
 To process MAGs and SAGs, simply use the "clean" function of MDMcleaner. If you have multiple genomes, specify them all at once instead of calling MDMcleaner individually for each genome. This reduces processing time by allowing the reuse of database objects without needing to reinitialize them for every query genome.
 For safety reasons the number of threads used is set to 1 by default. However many steps of the MDMcleaner pipeline can profit from using multiple threads. Remember to specify as many threads as you can safely use on your system.
 
-For each genome, intermediary results are stored in a seperate subfolder in "mdmcleaner_results". Delete them only when you are finished, as these allow resuming or rerunning analyses without having to redo all analyses from scratch...
+For each genome, intermediary results are stored in a separate subfolder in "mdmcleaner_results". Delete them only when you are finished, as these allow resuming or rerunning analyses without having to redo all analyses from scratch...
 
 By default, mdmcleaner will try to resolve any potential reference-database ambiguities it encounters. This will increase run time and may not always be successful. If speed is of essence, this can be skipped by using the ```--fast_run``` argument
 
@@ -146,9 +146,9 @@ optional arguments:
 ```
 
 ## OUTPUT FILES
-Running the ```clean``` option of MDMcleaner.py will create a mdmcleaner_results folder in the current working directory. Individual results for each genome are saved in individual subfolders of "mdmcleaner_results". This includes a detailed report on the individual contig classifications, an input-table for vizualization with KRONA and (optionally) filtered contig fastas, divided into the four categories "keep", "evaluate_low", "evaluate_high" and "delete":
+Running the ```clean``` option of MDMcleaner.py will create a mdmcleaner_results folder in the current working directory. Individual results for each genome are saved in individual subfolders of "mdmcleaner_results". This includes a detailed report on the individual contig classifications, an input-table for visualization with KRONA and (optionally) filtered contig fastas, divided into the four categories "keep", "evaluate_low", "evaluate_high" and "delete":
 #### individual output files per genome:
-- fullcontiginfos_beforecleanup.tsv --> a tab seperated table with details for each contig
+- fullcontiginfos_beforecleanup.tsv --> a tab separated table with details for each contig
 - \<genome-name\>_rRNA_lsu_rRNA.fasta --> 23s rRNA genes
 - \<genome-name\>_rRNA_ssu_rRNA.fasta --> 16s rRNA genes
 - \<genome-name\>_rRNA_tsu_rRNA.fasta --> 5s rRNA genes
@@ -156,18 +156,18 @@ Running the ```clean``` option of MDMcleaner.py will create a mdmcleaner_results
 - \<genome-name\>_totalprots.faa --> total protein sequences
 - \<genome-name\>_keep.fasta --> trusted contigs that are safe to submit
 - \<genome-name\>_evaluate_low.fasta --> contigs that yielded some kind of refDB ambiguity and __may__ profit from some individual re-evaluation (cross-blast against RefSeq etc)
-- \<genome-name\>_evaluate_high.fasta --> contigs that yielded indications of refDB contamiations and should not be submitted before detailed re-evaluation
+- \<genome-name\>_evaluate_high.fasta --> contigs that yielded indications of refDB contaminations and should not be submitted before detailed re-evaluation
 - \<genome-name\>_delete.fasta --> untrusted contigs that should definitively not be included in the genome submission
 - various intermediary files and progress markers...
 
 Additionally, general overview files are written to the current working directory: "overview_allbeforecleanup.tsv", "overview_refdb_ambiguities.tsv" and "overview_errorlist.txt"
 #### general overview files
-- overview_allbeforecleanup.tsv --> tab seperated table listing majority classification and general metrics per analyzed bin
-- overview_refdb_ambiguities.tsv --> tab seperated table listing detected refDB ambiguities together with evidence information and preliminary MDMcleaner assessments
+- overview_allbeforecleanup.tsv --> tab separated table listing majority classification and general metrics per analyzed bin
+- overview_refdb_ambiguities.tsv --> tab separated table listing detected refDB ambiguities together with evidence information and preliminary MDMcleaner assessments
 - overview_errorlist.txt --> list of genomes that yielded errors during MDMcleaner assessments and may need to be rerun
 
 ## How to cite:
-please cite our publication: [**Vollmers, John, et al. "How clear is our current view on microbial dark matter?(Re-) assessing public MAG & SAG datasets with MDMcleaner." Nucleic Acids Research (2022)**](https://doi.org/10.1093/nar/gkac294)
+Please cite our publication: [**Vollmers, John, et al. "How clear is our current view on microbial dark matter?(Re-) assessing public MAG & SAG datasets with MDMcleaner." Nucleic Acids Research (2022)**](https://doi.org/10.1093/nar/gkac294)
 
 ## For help or feedback:
-please write an issue on the [github repository](https://github.com/KIT-IBG-5/mdmcleaner/issues) or send us an [email](mailto:ibg5-support@lists.kit.edu?subject=[MDMcleaner%20support])
+Please write an issue on the [github repository](https://github.com/KIT-IBG-5/mdmcleaner/issues) or send us an [email](mailto:ibg5-support@lists.kit.edu?subject=[MDMcleaner%20support])
