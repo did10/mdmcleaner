@@ -21,17 +21,48 @@ def write_blacklist(blacklist, outfilename):
 			outfile.write("{}\n".format(b))
 
 def find_global_configfile():
+	"""
+		Returns {MDMCLEANER_LIBPATH}/mdmcleaner.config if the file exists and is a file.
+		
+		---
+		Returns:
+			str:
+				a concatination of MDMCLEANER_LIBPATH and "mdmcleaner.config"
+		Error:
+			If file does not exist or is not a file: exits the Application
+		---
+	"""
 	if os.path.exists(os.path.join(MDMCLEANER_LIBPATH, "mdmcleaner.config")) and os.path.isfile(os.path.join(MDMCLEANER_LIBPATH, "mdmcleaner.config")):
 		return os.path.join(MDMCLEANER_LIBPATH, "mdmcleaner.config")
 	sys.exit("\nError: a \"mdmcleaner.config\" file should exist under {}, but doesnt!\n".format(MDMCLEANER_LIBPATH))
 
 def find_local_configfile():
+	"""
+		Returns {current working directory}/mdmcleaner.config if the file exists and is a file.
+		
+		---
+		Returns:
+			str:
+				a concatination of MDMCLEANER_LIBPATH and "mdmcleaner.config"
+		---
+	"""
 	cwd = os.getcwd()
 	if os.path.exists(os.path.join(cwd, "mdmcleaner.config")) and os.path.isfile(os.path.join(cwd, "mdmcleaner.config")):
 		return os.path.join(cwd, "mdmcleaner.config")
 
 
 class config_object(object):
+	"""
+	Application configuration object containing 
+	* Application settings red from files
+		* self.settings: Containing all settings
+		* self.settings_source: files to read settings from
+	* Third party tool execution paths
+		* self.settings[{execs.key}]: Key value pair e.g. blastpath: /c/programs/blast.exe
+	* Blacklist file contents 
+		* self.blacklist: List of blacklist files 
+		* self.settings["blacklistfile"]: the content of all self.backlist files 
+	"""
 	execs = {	"blastpath" : ["blastn", "blastp", "makeblastdb", "blastdbcmd"],\
 				"diamondpath" : ["diamond"],\
 				"barrnappath" : ["barrnap"],\
@@ -44,6 +75,19 @@ class config_object(object):
 	config_file_setting_keys = config_file_exepathkeys + config_file_misckeys + config_file_dbkeys
 					
 	def __init__(self, args, read_blacklist = True):
+		"""
+		On initialisation:  
+		* Reads the global and local config file.
+		* Manages the paths for the execution of thrid party tools
+		* Reads the blacklist files
+		---
+		Parameters:
+			args: list[str]
+				List of command line parameters
+			read_blacklist: bool
+				wether or not blacklist files should be red. default is True 
+		---
+		"""
 		self.configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf != None ]
 		self.settings = {key : [] for key in self.config_file_setting_keys}
 		self.settings_source = {key : "default" for key in self.config_file_setting_keys}
@@ -59,6 +103,9 @@ class config_object(object):
 			self.blacklist = self.read_blacklistfiles()	
 	
 	def print_settings(self):
+		"""
+		Writes content of self.settings (key value pairs) to stderr.
+		"""
 		sys.stderr.write("\n\tsettings:\n")
 		for key in self.settings:
 			if self.settings[key] != []:
@@ -76,6 +123,12 @@ class config_object(object):
 
 		The threads command line argument overrides all config files.
 		settings_source["blacklistfile"] and self.settings["blacklistfile"] are also set.	
+		
+		---
+		Parameter:
+			args: list[str]
+				Command line arguments
+		---
 		"""
 		import os
 		self.settings["blacklistfile"] = []
@@ -106,6 +159,19 @@ class config_object(object):
 			self.settings["blacklistfile"].append(args.blacklistfile)	
 
 	def read_blacklistfiles(self):
+		"""
+		Reads all files from self.settings["blacklistfile"] line by line and returns the result.
+		
+		The '#' character escapes until the next '\\n'
+
+		---
+		Required:
+			self.settings["blacklistfile"] has to be set
+		Returns: 
+			set[str]
+				Set of strings where every entry contains a line of a blacklist file
+		---
+		"""
 		blacklist = []
 		for blacklistfile in self.settings["blacklistfile"]:
 			if not (os.path.exists(blacklistfile) and os.path.isfile(blacklistfile)):
