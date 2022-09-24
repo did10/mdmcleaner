@@ -1089,6 +1089,24 @@ def cleanupwhenfinished(progressdump, targetdir, verbose=False):
 #todo: DROP download of ncbi2gtdb and vice versa mapping files will not use them anyway!
 
 def get_publication_set(args, configs):
+	"""
+		Downloads the db from zenodo_publication_db, extracts the content and checks for validity
+		
+		Path of the downloaded tar is ``args.outdir/basename(zenodo_publication_db)``.
+		The tars hash is compared to zenodo_publication_db_md5 if the hash is incorrect the application exits.
+		The tar is unpacked and deleted. 
+		The unpacked files are hashed and the hash is compared to ``args.outdir/gtb/md5sum.txt``
+
+		---
+		Paramters:
+			args: 
+				List of parsed command line arguments 
+			configs:
+				unused
+		Error:
+			Exits the application if the downloaded hash and zenodo_publication_db_md5 aren't equal			
+		---
+	"""
 	from mdmcleaner import misc
 	sys.stderr.write("\nDownloading publicaton reference-dataset from Zenodo (Warning: this is definitively NOT the most recent reference dataset!)\n")
 	sys.stderr.flush()
@@ -1101,9 +1119,9 @@ def get_publication_set(args, configs):
 	tar_hash = misc.calculate_md5hash(tarfile)
 	if zenodo_publication_db_md5 != tar_hash:
 		sys.exit("\nERROR during download: md5hash of downloaded tar ({}) does not match hash of zenodo link ({})\n".format(tar_hash, zenodo_publication_db_md5))
-	sys.stderr.write("unacking tar file")
+	sys.stderr.write("unpacking tar file")
 	sys.stderr.flush()
-	tar_contents = misc.untar(tarfile, targetdir=args.outdir, removetar = True)
+	tar_filenames = misc.untar(tarfile, targetdir=args.outdir, removetar = True)
 	checksumdict = misc.check_md5file(os.path.join(args.outdir, "gtdb", "md5sum.txt"))
 	if False in [ checksumdict[x]["ok"] for x in checksumdict ]:
 		sys.stderr.write("\nERROR: following files had mismatching md5-hashes: {}\n--> PLEASE DELETE AND TRY AGAIN!\n".format("\n\t-".join([ checksumdict[x] for x in checksumdict if checksumdict[x]["ok"] == False])))
