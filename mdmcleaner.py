@@ -16,6 +16,17 @@ MDMCLEANER_LIBPATH = os.path.dirname(os.path.realpath(misc.__file__))
 from mdmcleaner._version import __version__
 
 def write_blacklist(blacklist, outfilename):
+	"""
+		Writes blacklist to file outfilename
+		Items of blacklist are appended to the file separated by '\\n'
+		---
+		Parameters:
+			blacklist: iteratable[str]
+				list to save to file
+			outfilename: str or File Object
+				Path to write the blacklist to
+		---
+	"""
 	with misc.openfile(outfilename, "at") as outfile:
 		for b in blacklist:
 			outfile.write("{}\n".format(b))
