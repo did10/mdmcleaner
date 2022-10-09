@@ -137,8 +137,8 @@ class config_object(object):
 		
 		---
 		Parameter:
-			args: list[str]
-				Command line arguments
+			args: 
+				Parsed command line arguments
 		---
 		"""
 		import os
