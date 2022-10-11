@@ -1092,8 +1092,6 @@ def get_publication_set(args, configs):
 	from mdmcleaner import misc
 	sys.stderr.write("\nDownloading publicaton reference-dataset from Zenodo (Warning: this is definitively NOT the most recent reference dataset!)\n")
 	sys.stderr.flush()
-	if args.outdir == None:
-		args.outdir = "./db"
 	if os.path.exists(os.path.join(args.outdir,"gtdb")):
 		sys.exit("\ntargetfolder already exists: '{}'. will not overwrite! Please delete it if you want to use this destination, or choose another target-folder!\n")
 	tarfile = os.path.join(args.outdir, os.path.basename(zenodo_publication_db))
