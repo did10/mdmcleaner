@@ -1088,7 +1088,7 @@ def cleanupwhenfinished(progressdump, targetdir, verbose=False):
 	os.remove(os.path.join(targetdir,lastprogressmarker))
 #todo: DROP download of ncbi2gtdb and vice versa mapping files will not use them anyway!
 
-def get_publication_set(args, configs):
+def get_publication_set(args):
 	from mdmcleaner import misc
 	sys.stderr.write("\nDownloading publicaton reference-dataset from Zenodo (Warning: this is definitively NOT the most recent reference dataset!)\n")
 	sys.stderr.flush()
@@ -1114,7 +1114,7 @@ def get_publication_set(args, configs):
 
 def main(args, configs): #todo: make option to read targetdir from configfile or to WRITE targetdir to configfile when finished
 	if args.get_pub_data:
-		get_publication_set(args, configs)
+		get_publication_set(args)
 	else:
 		getNprepare_dbdata_nonncbi(args.outdir, verbose=args.verbose, settings=configs.settings)
 
