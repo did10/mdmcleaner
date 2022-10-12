@@ -279,7 +279,6 @@ def main():
 		if args.accessions[0] == "interactive":
 			# ~ import pdb; pdb.set_trace()
 			sys.stderr.write("\n\nrunning {} acc2taxpath {} in interactive mode. type \"exit\" or press \"ctrl+D\" to exit\n\n".format(os.path.basename(sys.argv[0]), __version__))
-			userinput = ""
 			while True:
 				try:
 					userinput = input("enter accession here:")
