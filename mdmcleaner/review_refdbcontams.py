@@ -15,7 +15,7 @@ sm_contam_pattern = re.compile("potential refDB-contamination \[\w+ indication s
 
 class comparison_hit(object):
 	def __init__(self,*, taxid, seqid, domain, phylum, db, markerlevel, settings=None):
-		if settings == None:
+		if settings is None:
 			self.settings = {x:x for x in ["blastn", "blastp", "diamond"]}
 		else:
 			self.settings = settings
@@ -376,7 +376,7 @@ def read_ambiguity_report(ambiguity_report, configs):
 			contig = tokens[1]
 			markerlevel = tokens[2]			
 			ambtype = tokens[6]
-			if re.search(sm_contam_pattern, ambtype) == None: #ignore everything other than potential contaminations detected on singlemarker level for now (those exclusively found on weighted LCA level are more indicative for chimeras than refDB contaminations...)
+			if re.search(sm_contam_pattern, ambtype) is None: #ignore everything other than potential contaminations detected on singlemarker level for now (those exclusively found on weighted LCA level are more indicative for chimeras than refDB contaminations...)
 				continue
 			amb_evidence = tokens[8]
 			sys.stderr.write("\r\tprocessing line {}".format(counter))

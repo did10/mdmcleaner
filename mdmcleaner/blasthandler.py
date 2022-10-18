@@ -83,7 +83,7 @@ def read_lookup_table(lookup_table, table_format = None): #should be able to rea
 	possible_table_formats = ["gff", "tsv", "csv", None]
 	assert table_format in possible_table_formats, "ERROR: tableformat must be one of {}".format(",".join([str(x) for x in possible_table_formats]))
 	linelist = _read_anything(lookup_table)
-	if table_format == None:
+	if table_format is None:
 		table_format = _guess_format(linelist)
 	if table_format == "gff":
 		return _parse_gff(linelist)
@@ -106,14 +106,14 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 			# ~ print("blastdata object already exists! loading from pickle")
 			# ~ self.unpickleyourself(blastfiles[0])
 		assert seqtype in ["nuc", "prot", None], "\nERROR: seqtype must be either 'nuc', 'prot' or None (if unknown)\n"
-		assert blacklist == None or type(blacklist) == set, "\nERROR: blacklist must be of type == set\n"
+		assert blacklist is None or type(blacklist) == set, "\nERROR: blacklist must be of type == set\n"
 		self.seqtype = seqtype #todo: do something with this (e.g. set some cutoff)
 		self.min_ident = min_ident
 		self.max_evalue = max_evalue
 		self.score_cutoff_fraction = score_cutoff_fraction
 		self.keep_max_hit_fraction = keep_max_hit_fraction
 		self.keep_min_hit_count = keep_min_hit_count
-		if blacklist == None:
+		if blacklist is None:
 			self.blacklist = set()
 		else:
 			self.blacklist = blacklist
@@ -496,7 +496,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 					amb_infotext +=  "; weighted LCA affected by few low-identity cross-phylum/domain hits"		
 				amb_evidence += " weighted_best_tax={}(identity={:.2f}%, score={});;weighted_best_contradiction={}(identity={:.2f}%, score={})".format(outinfo["weighted_lca_top_contradictions"]["besthit_taxid"], outinfo["weighted_lca_top_contradictions"]["besthitident"], outinfo["weighted_lca_top_contradictions"]["besthitscore"],outinfo["weighted_lca_top_contradictions"]["bestcontra_taxid"], outinfo["weighted_lca_top_contradictions"]["bestcontraident"], outinfo["weighted_lca_top_contradictions"]["bestcontrascore"])
 				
-			if outinfo["sm_representative_contradiction"] == outinfo["weighted_lca_top_contradictions"] == None:
+			if outinfo["sm_representative_contradiction"] == outinfo["weighted_lca_top_contradictions"] is None:
 				# ~ hitlines = singlemarkerlcadict[list(singlemarkerlcadict.keys())[0]]["blastlines"] #previous version: looked only blast hits of first marker
 				hitlines = []
 				for sm in singlemarkerlcadict.keys(): #now: in case tehre are multiple markers (e.g. proteins) get blast hits of all of them and choose the three best based on score (not just simply take the three first hits of the FIRST marker)
@@ -511,7 +511,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 					best_gtdb_hits = [bl for bl in hitlines if db._gtdb_refseq_or_silva(bl["subject"]) == "gtdb"]
 					if len(best_gtdb_hits) > 0:
 						best_gtdb_hit = best_gtdb_hits[0]
-					if db._gtdb_refseq_or_silva(best3hitlines[0]["subject"]) == "silva" and  best3hitlines[0]["ident"] >= lca.species_identity_cutoffs[outinfo["markerlevel"]] and (best_gtdb_hit == None or (db._gtdb_refseq_or_silva(best_gtdb_hit["subject"]) and best_gtdb_hit["ident"] < lca.species_identity_cutoffs[outinfo["markerlevel"]])):
+					if db._gtdb_refseq_or_silva(best3hitlines[0]["subject"]) == "silva" and  best3hitlines[0]["ident"] >= lca.species_identity_cutoffs[outinfo["markerlevel"]] and (best_gtdb_hit is None or (db._gtdb_refseq_or_silva(best_gtdb_hit["subject"]) and best_gtdb_hit["ident"] < lca.species_identity_cutoffs[outinfo["markerlevel"]])):
 						amb_type = "unrepresented silva taxon/OTU"
 						amb_infotext = "matches a silva taxon/OTU on '{}'-level, which is apparently not represented with any genome data in gtdb".format(outinfo["markerlevel"])
 					else:
@@ -573,7 +573,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 
 		for i in singlemarkerlcadict:
 			tempdict = {}
-			if singlemarkerlcadict[i]["info"]["best_contradiction"] == None:
+			if singlemarkerlcadict[i]["info"]["best_contradiction"] is None:
 				continue
 			
 			outinfo["single_or_weighted_discrep"] = "single"			
@@ -610,7 +610,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 		
 		
 		if top2_contras != None:
-			if outinfo["discrepancy_taxlevel"] == None:
+			if outinfo["discrepancy_taxlevel"] is None:
 				outinfo["discrepancy_taxlevel"] = db.taxid2taxlevel(top2_contras[0])
 			if outinfo["single_or_weighted_discrep"] == "single":
 				outinfo["single_or_weighted_discrep"] = "single&weighted"
@@ -639,7 +639,7 @@ class blastdata_subset(blastdata_baseobject):
 		
 	def get_settings_from_blastdata_obj(self, blastdata_obj): #todo: TEST THIS
 		for x in ["max_evalue", "min_ident", "score_cutoff_fraction", "keep_max_hit_fraction", "keep_min_hit_count"]:
-			if getattr(self, x) == None:
+			if getattr(self, x) is None:
 				setattr(self, x, getattr(blastdata_obj, x))
 		 
 class blastdata(blastdata_baseobject):

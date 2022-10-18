@@ -221,7 +221,7 @@ def main():
 	
 	if args.command == "makedb":
 		from mdmcleaner import read_gtdb_taxonomy
-		if args.outdir == None:
+		if args.outdir is None:
 			if args.get_pub_data:
 				args.outdir = "./db"
 			else:

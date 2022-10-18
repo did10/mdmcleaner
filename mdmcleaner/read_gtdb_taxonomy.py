@@ -285,7 +285,7 @@ def download_gtdb_stuff(sourcedict = gtdb_source_dict, targetfolder=None, verbos
 			
 	download_dict = None
 	trycounter = 0
-	while download_dict == None and trycounter < maxtries:
+	while download_dict is None and trycounter < maxtries:
 		if trycounter > 0:
 			sys.stderr.write("\t-->Reattempting download\n")
 		for gtdbcat in sourcedict:
@@ -359,7 +359,7 @@ def download_silva_stuff(sourcedict = silva_source_dict, targetfolder=None, verb
 	wishdict = {silvacat : [ w.format(version) for w in sourcedict[silvacat]["wishlist"] ] for silvacat in sourcedict }
 	download_dict = None
 	trycounter = 0
-	while download_dict == None and trycounter < maxtries:
+	while download_dict is None and trycounter < maxtries:
 		if trycounter > 0:
 			sys.stderr.write("\t-->Reattempting download\n")
 		for silvacat in ["silva_taxfiles", "silva_fastas"]:
@@ -415,8 +415,8 @@ def read_gtdb_taxonomy_from_tsv(infilename, taxdict=None, LCA_walktree=None):#to
 	assumes that taxdict, LCA_walktree either BOTH pre-exist and are passed together, or that NONE of them preexist!
 	returns a taxonomy dictionary, a LCA_walktree dictionary and a preliminary unsorted acc2taxid-filename
 	"""
-	if taxdict == None or LCA_walktree == None:
-		assert taxdict == None and LCA_walktree == None, "\nError: either taxdict AND LCA_walktree must be passed, or NONE of them!\n"
+	if taxdict is None or LCA_walktree is None:
+		assert taxdict is None and LCA_walktree is None, "\nError: either taxdict AND LCA_walktree must be passed, or NONE of them!\n"
 		taxdict, LCA_walktree = _empty_taxdicts()
 	acc2taxidfilename = os.path.join(os.path.dirname(infilename), "temp_acc2taxid_" + os.path.basename(infilename) + ".acc2taxid.gz") #writing preliminary sorted accession2taxid lookup file. TODO: concatenate this with other sorted acc2taxid-lookupfiles using "_create_sorted_acc2taxid_lookup()" in getdb.py. Using "dummy" fields for columns 1 & 4 (actual info in columns 2&3) to make it compatible with "_create_sorted_acc2taxid_lookup()" in getdb.py
 	acc2taxidfile = openfile(acc2taxidfilename, "wt")
@@ -571,7 +571,7 @@ def _concat_fastas(contig_fastalist, outfastahandle, return_headerdict = False, 
 			if re.search(ip, filebasename):
 				ignore = True
 				break
-		if ignore == False and re.search(assemblyIDpattern, filebasename) == None:
+		if ignore == False and re.search(assemblyIDpattern, filebasename) is None:
 			sys.stderr.write("\nWARNING: encountered unexpected file '{}'! Probably something changed in the organization of the gtdb-download-server. Ignoring for now, BUT MAKE SURE THE WORKFLOW STILL WORKS!\n".format(filebasename))
 			ignore = True
 		if ignore:
@@ -768,7 +768,7 @@ def _prepare_dbdata_nonncbi(targetdir, progressdump, verbose=False, settings=Non
 	from mdmcleaner import getdb #todo: for using dict2jsonthis will be obsolete, when this is moved there #edit: no it won't. keeping download for gttdb and ncbi data seperate. common stuff goes to misc or getdb
 	import time #todo probably not needed anymore
 
-	if settings == None:
+	if settings is None:
 		settings = default_settings #by default assume all tools in pATH
 
 	def step4a():
@@ -1000,7 +1000,7 @@ def test_or_create_targetdir(targetdir):
 		raise PermissionError("\n\nERROR: insufficient write permissions for '{}'! Please choose a different target directory and try again\n".format(targetdir))
 
 def getNprepare_dbdata_nonncbi(targetdir, verbose=False, settings=None):
-	if settings == None:
+	if settings is None:
 		settings = default_settings #by default assume all tools in pATH
 	#TODO: pack all data into pgrogessdump
 	#  Todo: pass only progressdump to subsequent functions

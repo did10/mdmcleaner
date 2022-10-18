@@ -431,7 +431,7 @@ class taxdb(object):
 				placeholder_taxid = taxpath[-1][1]
 			if unofficials and "incertae sedis" in taxname and not official_phylum_level_set: 
 				# ~ is_incertae_sedis = True
-				if placeholder_phylum == None:
+				if placeholder_phylum is None:
 					placeholder_phylum = "{} {}".format(taxname, taxpath[-1][0]) #use the lowest level clade in ncbi as "placeholder" for phylum
 				else:
 					placeholder_phylum = "{} {}".format(taxname, placeholder_phylum)

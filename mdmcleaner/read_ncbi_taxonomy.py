@@ -150,7 +150,7 @@ def lca_and_json_taxdb_from_dmp(download_dir = "."):
 			#print(type(taxdict))
 			#print(len(taxdict))
 			#print(taxdict[1])
-			assert taxdict[taxid]["taxname"] == None, "{} There are different scientific names for the same taxid. Need to look into this and choose which one to take...".format(taxid)
+			assert taxdict[taxid]["taxname"] is None, "{} There are different scientific names for the same taxid. Need to look into this and choose which one to take...".format(taxid)
 			taxdict[taxid]["taxname"] = taxname
 		infile.close()
 		return taxdict

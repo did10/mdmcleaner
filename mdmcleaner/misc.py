@@ -59,7 +59,7 @@ def unixzcat(*infilelist, outfilename): #my guess is, that this is probably much
 def untar(infilename, targetdir=".", filemode = None, removetar = False, verbose=False): #todo: make sure calling function passes verbose variable
 	""" a convenience function for unpacking compressed and ancompressed tar files.
 	accepts a filename(required) and an optional filemode (default = None) argument.
-	filemode may be any of ["r:", "r:gz", "r:bz2", None ]. If filemode == None, it will try to determine filemode based on filename-extension
+	filemode may be any of ["r:", "r:gz", "r:bz2", None ]. If filemode is None, it will try to determine filemode based on filename-extension
 	".tar" = uncompressed tar --> filemode = "r:", ".tar.gz" = compressed tar --> filemode "r:gz"
 	unpacks tar to targetdir and returns a list of unpacked filenames
 	"""
@@ -76,7 +76,7 @@ def untar(infilename, targetdir=".", filemode = None, removetar = False, verbose
 	assert filemode in ["r:", "r:gz", "r:bz2", None], "\nERROR: filemode not allowed : '{}'\n".format(filemode)
 	sys.stderr.write("\tassessing contents of '{}'\n".format(infilename))
 	sys.stderr.flush() 
-	if filemode == None:
+	if filemode is None:
 		if infilename.endswith(".tar.gz"):
 			filemode = "r:gz"
 		elif infilename.endswith(".tar.bz2"):

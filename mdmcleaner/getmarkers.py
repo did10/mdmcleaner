@@ -347,7 +347,7 @@ def hmmersearch(hmmsearch, model, query, outfilename, score_cutoff = None, eval_
 	note that for self-built hmms without "GA" and "NC" keys, cutoffs will need to be specified explicitely.
 	"""
 	eval_cutoff_arg, score_cutoff_arg = [], []
-	if (eval_cutoff == None and score_cutoff == None) or score_cutoff == "strict":
+	if (eval_cutoff is None and score_cutoff is None) or score_cutoff == "strict":
 		score_cutoff = ["--cut_tc"] # use trusted cutoff of hmm model (if available). consider only using gathering threshold (GA) uinstead
 	elif score_cutoff == "sensitive":
 		score_cutoff = ["--cut_nc"] # use noise cutoff of hmm model (if available).	
@@ -410,7 +410,7 @@ def parse_hmmer(hmmerfile, cutoff_dict = cutofftablefile, cmode = "moderate", pr
 		#TODO: add logger message that cutoff dict is being read from file
 		cutoff_dict = get_cutoff_dict(cutoff_dict)
 	infile = openfile(hmmerfile)
-	if prev_results == None:
+	if prev_results is None:
 		markerdict = {}
 	elif type(prev_results) == dict:
 		markerdict = prev_results
@@ -617,7 +617,7 @@ def add_rrnamarker_to_contigdict_and_markerdict(rrnamarkerdict, contigdict, mark
 #######################
 class gdata(object): #meant for gathering all contig/protein/marker info
 	def __init__(self, contigfile, threads = 1, outbasedir = "mdmcleaner_results", mincontiglength = 0, outprefix="MDM_", configs = None): #todo: enable init with additional precalculated infos
-		if configs == None:
+		if configs is None:
 			self.settings = {x:x for x in ["blastn", "blastp", "makeblastdb", "blastdbcmd","diamond","barrnap","hmmsearch","aragorn"]} #default: assume all tools in PATH
 			self.threads = threads # todo: just switch to having all basic settings in configs...
 		else:
@@ -698,12 +698,12 @@ class gdata(object): #meant for gathering all contig/protein/marker info
 		for contig in self.contigdict:
 			wrongmarkerlist = []
 			for bacmarker in self.contigdict[contig]["bac_marker"]:
-				if self.markerdict[bacmarker]["tax"] == None or db.isnot_bacteria(self.markerdict[bacmarker]["tax"].taxid):
+				if self.markerdict[bacmarker]["tax"] is None or db.isnot_bacteria(self.markerdict[bacmarker]["tax"].taxid):
 					wrongmarkerlist.append(bacmarker)
 			self.contigdict[contig]["bac_marker"] = [m for m in self.contigdict[contig]["bac_marker"] if m not in wrongmarkerlist ]
 			wrongmarkerlist = []
 			for arcmarker in self.contigdict[contig]["arc_marker"]:
-				if self.markerdict[arcmarker]["tax"] == None or db.isnot_archaea(self.markerdict[arcmarker]["tax"].taxid):
+				if self.markerdict[arcmarker]["tax"] is None or db.isnot_archaea(self.markerdict[arcmarker]["tax"].taxid):
 					wrongmarkerlist.append(arcmarker)
 			self.contigdict[contig]["arc_marker"] = [m for m in self.contigdict[contig]["arc_marker"] if m not in wrongmarkerlist ]	
 	
@@ -900,7 +900,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 	def get_topleveltax(self, db):
 		def levels_difference(querytax, majortax): #querytax and majortax can be either taxtuplelists or majortaxdicts, doesnt matter
 			if topleveltax != None:
-				if querytax == None:
+				if querytax is None:
 					return len(topleveltax)
 				if len(topleveltax) > len(querytax):
 					return len(topleveltax) - len(querytax)
@@ -925,7 +925,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 			contiglen = self.contigdict[contig]["contiglen"]
 			for m in markerranking:
 				if self.contigdict[contig][m] != None:
-					if topleveltax == None:
+					if topleveltax is None:
 						topleveltax = self.contigdict[contig][m]
 						self.contigdict[contig]["toplevel_tax"] = topleveltax
 						self.contigdict[contig]["toplevel_marker"] = m
@@ -1033,7 +1033,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 
 		
 		contig_toptaxasstuplelist = self.contigdict[contig]["toplevel_tax"]
-		if contig_toptaxasstuplelist == None:
+		if contig_toptaxasstuplelist is None:
 			if sum([len(self.contigdict[contig][x]) for x in [ "ssu_rRNA", "lsu_rRNA", "tsu_rRNA", "tRNAs", "prok_marker", "bac_marker", "arc_marker", "totalprots"]]) == 0:
 				self.contigdict[contig]["tax_note"] += "ATTENTION: contig contains no detectable coding features --> automatically assumed eukaryotic!"
 				self.contigdict[contig]["info_flag"] = "non-coding"
@@ -1123,7 +1123,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 		elif self.contigdict[contig]["viral"] and filter_viral:
 			filterflag = "delete"
 		elif self.contigdict[contig]["refdb_ambig"] and "fringe case" in self.contigdict[contig]["refdb_ambig"] and not "potential refDB-contamination" in self.contigdict[contig]["refdb_ambig"]:
-			if self.contigdict[contig]["contradict_consensus"] == None:
+			if self.contigdict[contig]["contradict_consensus"] is None:
 				filterflag = "keep"
 			else:
 				filterflag = "evaluate_low"
@@ -1181,7 +1181,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 				
 		contig_counter = 0
 		contam_counter = 0					
-		if db_suspects == None and not fast_run:
+		if db_suspects is None and not fast_run:
 			db_suspects = review_refdbcontams.suspicious_entries(db, self.configs)
 		
 		sys.stderr.write("\n-->evaluating contigs and setting filter-flags\n")
@@ -1281,7 +1281,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 				sys.stdout.write(line)
 	
 	def get_unclass_contignames(self):
-		return [ contig for contig in self.contigdict if self.contigdict[contig]["toplevel_tax"] == None ]
+		return [ contig for contig in self.contigdict if self.contigdict[contig]["toplevel_tax"] is None ]
 	
 	def get_unclass_contigs(self):
 		return self.get_contig_records(self.get_unclass_contignames())
@@ -1375,7 +1375,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 				taxpath += ["unclassified"]	
 				if self.contigdict[contig]["non-coding"] or self.contigdict[contig]["info_flag"] == "non_coding":
 					taxpath += ["non-coding"]
-				elif self.contigdict[contig]["toplevel_ident"] == None:
+				elif self.contigdict[contig]["toplevel_ident"] is None:
 					taxpath += ["no_blast_hit"]
 			outfile.write("{}\t{}\n".format(contiglen, "\t".join(taxpath)))
 			
