@@ -44,7 +44,7 @@ class config_object(object):
 	config_file_setting_keys = config_file_exepathkeys + config_file_misckeys + config_file_dbkeys
 					
 	def __init__(self, args, read_blacklist = True):
-		self.configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf != None ]
+		self.configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf is not None ]
 		self.settings = {key : [] for key in self.config_file_setting_keys}
 		self.settings_source = {key : "default" for key in self.config_file_setting_keys}
 		self.blacklist = set()
@@ -97,7 +97,7 @@ class config_object(object):
 			self.settings["threads"] = args.threads
 		else:
 			self.settings["threads"] = int(self.settings["threads"][0])
-		if "blacklistfile" in vars(args) and args.blacklistfile != None:
+		if "blacklistfile" in vars(args) and args.blacklistfile is not None:
 			self.settings["blacklistfile"].append(args.blacklistfile)	
 
 	def read_blacklistfiles(self):
@@ -194,7 +194,7 @@ def main():
 		sys.stderr.write("MDMcleaner v{}\n".format(__version__))
 
 	# ~ if args.command in ["clean", "makedb", "show_configs", "get_markers", "acc2taxpath", "refdb_contams", "check_dependencies"]:
-		# ~ configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf != None ]
+		# ~ configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf is not None ]
 		# ~ configs, settings_source = read_configs(configfile_hierarchy, args)
 		# ~ sys.stderr.write("\n\nSETTINGS:\n" + pprint.pformat(configs)+ "\n\n")
 		# ~ if args.command in ["clean", "get_markers", "refdb_contams"]:
@@ -215,7 +215,7 @@ def main():
 		from mdmcleaner import clean
 		check_dependencies.check_dependencies("blastp", "blastn", "diamond", "aragorn", "barrnap", "hmmsearch", configs=configs)
 		blacklist_additions = clean.main(args, configs)
-		if not args.fast_run and blacklist_additions != None:
+		if not args.fast_run and blacklist_additions is not None:
 			print("\n------> writing {} blacklist additions to {}".format(len(blacklist_additions), args.outblacklist))
 			write_blacklist(blacklist_additions, args.outblacklist)
 	
@@ -254,7 +254,7 @@ def main():
 			outfile = misc.openfile("mdmcleaner.config", "wt")
 		arg_settings = vars(args)
 		for a in arg_settings:
-			if a != "scope" and arg_settings[a] != None:
+			if a != "scope" and arg_settings[a] is not None:
 				conf.settings[a] = [arg_settings[a]]
 		for c in conf.settings:
 			if c in conf.config_file_setting_keys and conf.settings[c]:

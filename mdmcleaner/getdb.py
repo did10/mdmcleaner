@@ -137,7 +137,7 @@ def _create_sorted_acc2taxid_lookup(acc2taxidfilelist, acc2taxid_outfilename):
 		tempfile = tempfile + ".sorted"
 		sys.stderr.write("\textracting and presorting {}\n".format(f))
 		sout, serr = subprocess.Popen(["bash", "-c", presortcmd.format(infile=f, outfile=tempfile)], stdout=subprocess.PIPE).communicate()
-		if serr != None:
+		if serr is not None:
 			raise RuntimeError("...extraction exited with Error:\n{}\n".format(serr))
 		os.remove(f) 
 		if os.path.exists(f + ".md5"):
@@ -145,7 +145,7 @@ def _create_sorted_acc2taxid_lookup(acc2taxidfilelist, acc2taxid_outfilename):
 		tempfilelist.append(tempfile)
 	sys.stderr.write("\tcombining sorted tempfiles: {}\n".format(", ".join(tempfilelist)))
 	sout,serr = subprocess.Popen(["bash", "-c", finalsortcmd.format(filelist=" ".join(tempfilelist), finaldb=acc2taxid_outfilename)], stdout=subprocess.PIPE).communicate()
-	if serr != None:
+	if serr is not None:
 			raise RuntimeError("...extraction exited with Error:\n{}\n".format(serr))
 	#now clean up:
 	# ~ end = time.time()
@@ -169,7 +169,7 @@ class taxdb(object):
 
 	def set_db_attributes(self, configs, db_basedir = None):
 		from mdmcleaner import read_gtdb_taxonomy #todo: after reimplementing optional ncbi taxonomy, put both into the same module and import THAT here
-		if db_basedir != None:
+		if db_basedir is not None:
 			self.db_basedir = db_basedir
 		else:
 			self.db_basedir = configs.settings["db_basedir"][0]
@@ -406,7 +406,7 @@ class taxdb(object):
 		#todo: veryfy that this works for ncbi as well as for gtdb taxonomy-dbs
 		# ~ id_candidate_phyla = 1783234
 		# ~ id_bacteria_incertae_sedis = 2323 
-		assert self.taxdict != None, "\nError in taxid2taxpath: you must provide a taxdb-file\n"
+		assert self.taxdict is not None, "\nError in taxid2taxpath: you must provide a taxdb-file\n"
 		assert isinstance(fullpath, bool), "\nError in taxid2taxpath: 'fullpath' must be either True or False\n"
 		assert isinstance(unofficials, bool), "\nError in taxid2taxpath: 'unofficials' must be either True or False\n"
 		if not taxid:
@@ -436,13 +436,13 @@ class taxdb(object):
 				else:
 					placeholder_phylum = "{} {}".format(taxname, placeholder_phylum)
 					placeholder_taxid = taxpath[-1][1]
-				if placeholder_phylum_listindex != None: #make sure that only the lowest level instance of "incertae sedis" is interpreted as phylum
+				if placeholder_phylum_listindex is not None: #make sure that only the lowest level instance of "incertae sedis" is interpreted as phylum
 					taxpath.pop(placeholder_phylum_listindex)
 				placeholder_phylum_listindex = len(taxpath)
 				taxpath.append((placeholder_phylum, placeholder_taxid, 20))	
 			if taxrank == 20: #safeguard to make sure only one phylum-level entry is in taxpath even when looking at current "inofficials", in case ncbi Taxonomy changes e.g. in regard to "Bacteria candidate phyla"
 				phylum_level_set = True
-				if placeholder_phylum_listindex != None: #if an placeholder-phylum was set BUT now we find an official ncbi-taxonomy-recognized phylum, delete the placeholder
+				if placeholder_phylum_listindex is not None: #if an placeholder-phylum was set BUT now we find an official ncbi-taxonomy-recognized phylum, delete the placeholder
 					taxpath.pop(placeholder_phylum_listindex)
 			#end of workaround for candidate phyla. may likely drop the above portion here, and instead adapt it for the LCA portion later? ALthough this is probably mostly used for filtering anyay. so would fit better here...?
 			taxpath.append((taxname, taxid, taxrank)) 		

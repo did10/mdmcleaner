@@ -47,7 +47,7 @@ def main(args, configs):
 	# ~ args = myparser.parse_args()
 	#print(args.configfile)
 	
-	# ~ configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf != None ]
+	# ~ configfile_hierarchy = [ cf for cf in [find_global_configfile(), args.configfile] if cf is not None ]
 	# ~ print(configfile_hierarchy)
 	# ~ configs = read_configs(configfile_hierarchy, args) #todo finish this
 	#initialize blastdbs
@@ -155,22 +155,22 @@ def main(args, configs):
 
 			################## compiling infos #todo: condense this!
 			for contig in bindata.contigdict: #todo: create an own class in lca.py for this. that class should have options to filter, evaluate etc...
-				ctotalprottax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["totalprots"] if bindata.markerdict[x]["tax"] != None]
+				ctotalprottax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["totalprots"] if bindata.markerdict[x]["tax"] is not None]
 				testlca_dict_total[contig] = lca.weighted_lca(db, contig, ctotalprottax, taxlevel="totalprots_tax")
 				if len(testlca_dict_total[contig]) != 0:
 					bindata.contigdict[contig]["totalprots_tax"] = testlca_dict_total[contig]
 
-				cprokprottax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["prok_marker"] + bindata.contigdict[contig]["bac_marker"] + bindata.contigdict[contig]["arc_marker"] if bindata.markerdict[x]["tax"] != None]
+				cprokprottax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["prok_marker"] + bindata.contigdict[contig]["bac_marker"] + bindata.contigdict[contig]["arc_marker"] if bindata.markerdict[x]["tax"] is not None]
 				testlca_dict_prok[contig] = lca.weighted_lca(db, contig, cprokprottax, taxlevel = "prok_marker_tax")
 				if len(testlca_dict_prok[contig]) != 0:
 					bindata.contigdict[contig]["prok_marker_tax"] = testlca_dict_prok[contig]
 
-				c23srrnatax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["lsu_rRNA"] if bindata.markerdict[x]["tax"] != None]
+				c23srrnatax = [bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["lsu_rRNA"] if bindata.markerdict[x]["tax"] is not None]
 				testlca_dict_23s[contig] = lca.weighted_lca(db, contig, c23srrnatax, taxlevel = "lsu_rRNA_tax")
 				if len(testlca_dict_23s[contig]) != 0:
 					bindata.contigdict[contig]["lsu_rRNA_tax"] = testlca_dict_23s[contig]
 
-				c16srrnatax =[bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["ssu_rRNA"] if bindata.markerdict[x]["tax"] != None]
+				c16srrnatax =[bindata.markerdict[x]["tax"] for x in bindata.contigdict[contig]["ssu_rRNA"] if bindata.markerdict[x]["tax"] is not None]
 				testlca_dict_16s[contig] = lca.weighted_lca(db, contig, c16srrnatax, taxlevel = "ssu_rRNA_tax") 
 				if len(testlca_dict_16s[contig]) != 0:
 					bindata.contigdict[contig]["ssu_rRNA_tax"] = testlca_dict_16s[contig]
@@ -226,7 +226,7 @@ def main(args, configs):
 			traceback.print_exc()
 			errorlistfile.write(infasta + "\n")
 
-	if not args.fast_run and db_suspects != None:
+	if not args.fast_run and db_suspects is not None:
 		if "contamination" in db_suspects.collective_diamondblast():
 			sys.stderr.write("\nWARNING: potential eukaryotic contaminants were determined in reference genomes. some classifications may need to be ajdjusted.\nIt is recommended to run the pipeline again (as is), with the updated blacklist to correct that (most intermediate results can be reused, so this will be faster than the original run)\n\n")
 		if len(db_suspects.blacklist_additions) > 0:
@@ -238,7 +238,7 @@ def main(args, configs):
 			f.close() #make sure whole buffer is written to files before script terminates!
 	sys.stderr.write("\n{line}finished{line}\n".format(line="-"*30))
 
-	if db_suspects != None: #removing tempfiles from refdb-ambiguity assessments
+	if db_suspects is not None: #removing tempfiles from refdb-ambiguity assessments
 		for f in db_suspects.delete_filelist:
 			os.remove(f)
 		os.rmdir(db_suspects.tempdir)

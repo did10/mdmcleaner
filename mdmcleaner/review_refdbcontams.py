@@ -63,7 +63,7 @@ class comparison_hit(object):
 
 	def blast_contigs(self, threads = 1, blacklist=None, outfileprefix = ""):
 		# ~ import time
-		if self.blast != None:
+		if self.blast is not None:
 			basic_blastarglist = [ (self.seqrecord, blastdb, self.blast) for blastdb in self.blastdbs ]
 			outbasename = "{}refblast_{}_".format(outfileprefix, self.seqid)
 			# ~ start = time.time()
@@ -128,7 +128,7 @@ class comparison_hit(object):
 		# ~ print("domain_counts contradicting == {}".format(domain_counts_contradicting))
 		domain_weights_expected = domain_weights[comparison_domain]
 		domain_weights_contradicting = sum([domain_weights[x] for x in domain_weights.keys() if x != comparison_domain])
-		domain_weights_contradicting_excluding_none = sum([domain_weights[x] for x in domain_weights.keys() if (x != comparison_domain and x != None) ])
+		domain_weights_contradicting_excluding_none = sum([domain_weights[x] for x in domain_weights.keys() if (x != comparison_domain and x is not None) ])
 		# ~ print("domain_weights:\n\t{}".format("\n\t".join(["{} : {}".format(key, domain_weights[key]) for key in domain_weights.keys() ])))
 		# ~ print("domain_weights expected == {}".format(domain_weights_expected))
 		# ~ print("domain_weights contradicting == {}".format(domain_weights_contradicting))
@@ -144,7 +144,7 @@ class comparison_hit(object):
 		# ~ print("phylum_counts contradicting == {}".format(phylum_counts_contradicting))
 		phylum_weights_expected = phylum_weights[comparison_phylum]
 		phylum_weights_contradicting = sum([phylum_weights[x] for x in phylum_weights.keys() if x != comparison_phylum ])
-		phylum_weights_contradicting_excluding_none = sum([phylum_weights[x] for x in phylum_weights.keys() if (x != comparison_phylum and x != None)])
+		phylum_weights_contradicting_excluding_none = sum([phylum_weights[x] for x in phylum_weights.keys() if (x != comparison_phylum and x is not None)])
 		# ~ print("phylum_weights:\n\t{}".format("\n\t".join(["{} : {}".format(key, phylum_weights[key]) for key in phylum_weights.keys() ])))
 		# ~ print("phylum_weights expected == {}".format(phylum_weights_expected))
 		# ~ print("phylum_weights contradicting == {}".format(phylum_weights_contradicting))

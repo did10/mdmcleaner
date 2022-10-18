@@ -83,7 +83,7 @@ def _download_unixwget(sourceurl, pattern=None, targetdir=None, verbose=False): 
 	wget_proc = subprocess.Popen(wgetcmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True, universal_newlines=True)
 	while True:
 		output = wget_proc.stderr.readline()
-		if wget_proc.poll() != None:
+		if wget_proc.poll() is not None:
 			break
 		if output:
 			sys.stderr.write("\r" + output.rstrip("\n")) #todo: find a way to have newlines everytime a new file is downloaded

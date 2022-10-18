@@ -234,16 +234,16 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 			sys.stderr.write("\tadding info to blastlines (old version)\n")
 		# ~ starttime = time.time()
 		for i in range(len(self.blastlinelist)):
-			if bindata_obj != None:
+			if bindata_obj is not None:
 				# ~ import pdb; pdb.set_trace()
 				self.blastlinelist[i]["contig"] = bindata_obj.marker2contig(self.blastlinelist[i]["query"])
 				self.blastlinelist[i]["stype"] = bindata_obj.markerdict[self.blastlinelist[i]["query"]]["stype"]
-			# ~ if self.seqtype != None:
+			# ~ if self.seqtype is not None:
 				# ~ if self._prot_or_nuc(self.blastlinelist[i]["stype"]) != self.seqtype:
 					# ~ self.seqtype = "mixed"
 			# ~ else:
 				# ~ self.seqtype = self._prot_or_nuc(self.blastlinelist[i]["stype"])
-			if taxdb_obj != None:
+			if taxdb_obj is not None:
 				# ~ print("--{}--".format(self.blastlinelist[i]))
 				# ~ import pdb; pdb.set_trace()
 				self.blastlinelist[i]["taxid"] = taxdb_obj.acc2taxid(self.blastlinelist[i]["subject"])[0]
@@ -260,12 +260,12 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 		# ~ import time #todo: remove this later
 		# ~ sys.stderr.write("\tadding info to blastlines (NEW version)")
 		# ~ starttime = time.time()
-		# ~ if taxdb_obj != None:
+		# ~ if taxdb_obj is not None:
 			# ~ acc2taxiddict = taxdb_obj.acclist2taxiddict(list({bl["subject"] for bl in self.blastlinelist})) 
 		# ~ for i in range(len(self.blastlinelist)):
 			# ~ self.blastlinelist[i]["contig"] = bindata_obj.marker2contig(self.blastlinelist[i]["query"])
 			# ~ self.blastlinelist[i]["stype"] = bindata_obj.markerdict[self.blastlinelist[i]["query"]]["stype"]
-			# ~ if taxdb_obj != None:
+			# ~ if taxdb_obj is not None:
 				# ~ self.blastlinelist[i]["taxid"] = acc2taxiddict.get(self.blastlinelist[i]["subject"])
 		# ~ endtime = time.time()
 		# ~ print("\nthis took {} seconds\n".format(endtime - starttime))
@@ -273,9 +273,9 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 	def sort_blastlines_by_gene(self, contig=None):
 		'''
 		returns a list of blastlines, sorted first increasingly by contig-id and query-id, and then decreasingly by score.
-		if contig is != None: only blastlines corresponding to the specified contig are processed. Otherwise all blastlines are processed.
+		if contig is not None: only blastlines corresponding to the specified contig are processed. Otherwise all blastlines are processed.
 		'''
-		if contig != None:
+		if contig is not None:
 			return sorted(self.get_blastlines_for_contig(contig), key = lambda x: (x["contig"], x["query"], -x["score"]))
 		return sorted(self.blastlinelist, key = lambda x: (x["contig"], x["query"], -x["score"])) #sorts hits first increasingly by contig and query-name (not the same in case of rRNA genes), then decreasingly by score	
 
@@ -372,7 +372,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 			if bl["subject"] in self.blacklist:
 				# ~ print("' {}' is on blacklist --> ignoring!".format(bl["subject"]))
 				continue
-			if bindata_obj != None:
+			if bindata_obj is not None:
 				bl["contig"] = bindata_obj.marker2contig(bl["query"])
 				bl["stype"] = bindata_obj.markerdict[bl["query"]]["stype"]
 			self.blastlinelist.append(bl)
@@ -458,7 +458,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 			amb_type = "" #can be potential refDB-contamination("high indication", "moderate indication", "fringe-case")on sm- and/or weighted-LCA level, silva-gtdb-ambiguity(-->should choose lower marker-level if possible) 
 			amb_evidence = ""
 			amb_infotext = ""
-			if outinfo["sm_representative_contradiction"] != None:
+			if outinfo["sm_representative_contradiction"] is not None:
 				amb_infotext = "contradictions within single marker LCAs"	
 				if outinfo["sm_representative_contradiction"]["bestcontraident"] >= outinfo["cutoffs"][0]:
 					amb_type = "potential refDB-contamination [high indication sm-LCA level]"
@@ -483,7 +483,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 						bc_evidence = "{}; {}".format(bc_accsource, bc_evidence)
 				amb_evidence += " sm_best hit={} ;; sm_best contradiction={}".format(bh_evidence, bc_evidence)
 
-			if outinfo["weighted_lca_top_contradictions"] != None: #todo: I know, I know! Is redundant! I don't have the time to optimize RN. Something for version 1.1...
+			if outinfo["weighted_lca_top_contradictions"] is not None: #todo: I know, I know! Is redundant! I don't have the time to optimize RN. Something for version 1.1...
 				amb_infotext+="; contradictions between individual LCAs (weighted LCA)"
 				if outinfo["weighted_lca_top_contradictions"]["bestcontraident"] >= outinfo["cutoffs"][0]:
 					amb_type += "potential refDB-contamination or chimeric-contig [high indication weighted-LCA level]"
@@ -568,7 +568,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 					break
 				currentline += 1
 		
-		tempsinglemarkerlcas = [ singlemarkerlcadict[mn]["lca"] for mn in singlemarkerlcadict if singlemarkerlcadict[mn]["lca"] != None ]
+		tempsinglemarkerlcas = [ singlemarkerlcadict[mn]["lca"] for mn in singlemarkerlcadict if singlemarkerlcadict[mn]["lca"] is not None ]
 		sm_contradiction_overview = {} #todo: not used much yet, but already coded in case further analyses should be added in the near future
 
 		for i in singlemarkerlcadict:
@@ -609,7 +609,7 @@ class blastdata_baseobject(object): #todo: define differently for protein or nuc
 		outtaxpath, top2_contras, top2_contras_avidents, top2_contras_avscores = lca.weighted_lca(db, blasthitlist=tempsinglemarkerlcas, taxlevel=markerlevel, return_contradicting_top2 = True)
 		
 		
-		if top2_contras != None:
+		if top2_contras is not None:
 			if outinfo["discrepancy_taxlevel"] is None:
 				outinfo["discrepancy_taxlevel"] = db.taxid2taxlevel(top2_contras[0])
 			if outinfo["single_or_weighted_discrep"] == "single":
@@ -669,7 +669,7 @@ def read_blast_tsv(infilename, max_evalue = None, min_ident = None, dbobj = None
 	for line in infile:
 		tokens = line.strip().split("\t")
 		bl = { x : tokens[columninfos[x]] if type(columninfos[x]) == int else None for x in columninfos}
-		if bindata_obj != None:
+		if bindata_obj is not None:
 			bl[contig] = bindata.marker2contig(bl["query"])
 		if max_evalue and bl["evalue"] > max_evalue: #bl.evalue > max_evalue:
 			continue
@@ -757,7 +757,7 @@ def _add_contigs2blasthits_later(blastlinelist, parsetype = "prodigal", lookup_t
 	#end of subfunctions
 	assert parsetype in ["prodigal", "rnammer", "barrnap", "lookup"], "Do not recognize parsetype {}".format(parsetype)
 	if parsetype == "lookup":
-		assert lookup_table != None, "if parsetype is set to \"lookup\", a corresponding lookup_table must also be provided"
+		assert lookup_table is not None, "if parsetype is set to \"lookup\", a corresponding lookup_table must also be provided"
 		return _parse_lookup_table(blastlinelist, lookup_table)
 	if parsetype == "prodigal":
 		return _parse_prodigal(blastlinelist)

@@ -88,7 +88,7 @@ def strict_lca(taxdb, seqid = None, blasthitlist=None, threads=1):
 	Returns strict lca of a list of blasthits or pre-lca-annotations.
 	Each blast hit should be represented as a named tuple with the following fields: (Accession/seqid, taxid, identity, score)
 	"""
-	assert blasthitlist != None and len(blasthitlist) > 0, "\nError, but provide at least one blast hit!\n"
+	assert blasthitlist is not None and len(blasthitlist) > 0, "\nError, but provide at least one blast hit!\n"
 	# ~ print("doing LCA!")
 	interim_taxid = blasthitlist[0].taxid
 	#if len(blasthitlist) == 1: #probably already covered by looping over "range(1, len(blasthitlist))"

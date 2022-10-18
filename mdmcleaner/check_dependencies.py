@@ -20,7 +20,7 @@ class version_object(object):
 	def __init__(self, version_string):
 		templist = [0]*3 #Only comparing major, minor and patch versions. Not accomodating any potential strange special cases here (dependency list is rather small anyway)
 		self.version_string = "None"
-		if version_string != None:
+		if version_string is not None:
 			if isinstance(version_string, str):
 				self.version_string = re.search("\d+(\.\d+)+",version_string).group(0) #this will get rid of prefixes such as "v" but also of non-numeric pre-release designations
 				version_digits = version_string.split(".")[:3]

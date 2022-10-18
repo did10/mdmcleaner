@@ -95,7 +95,7 @@ def split_fasta_for_parallelruns(infasta, minlength = 0, number_of_fractions = 2
 	outlist = [ x for x in outlist if len(x) > 0 ] #removing any leftover fractions that did not get contigs (in case number of contigs was lower than number of fractions)
 	sys.stderr.write("\tdivided {} contigs into {} fractions\n".format(contigcounter, len(outlist)))
 
-	if outfilebasename != None: #IF an outfilenasename is specified --> Do NOT return a list of lists of seqrecords, but instead write fractions fo tempfiles and return list of linemanes instead
+	if outfilebasename is not None: #IF an outfilenasename is specified --> Do NOT return a list of lists of seqrecords, but instead write fractions fo tempfiles and return list of linemanes instead
 		outfilenamelist = []
 		for i in range(len(outlist)):
 			outfilenamelist.append("{}_temp_fraction_{}.fasta".format(outfilebasename, i))
@@ -188,7 +188,7 @@ def _parse_aragorn_output(outstringlist, contigset=None, verbose=False): #todo:i
 			contig = line[1:].split()[0]
 			continue
 		trnahit = re.search(trnapattern, line)
-		if trnahit != None:
+		if trnahit is not None:
 			trna = trnahit.group(1)
 			location = trnahit.group(2)
 			genename = "trna_{}__aragorn_{}__{}".format(contig, trna, location)
@@ -208,7 +208,7 @@ def trna_completeness(trna_seqid_list):
 	trnaset = set()
 	for trna_seqid in trna_seqid_list:
 		trna_type_match = re.match(_trnapattern, trna_seqid)
-		assert trna_type_match != None, "\nError: not a recognized tRNA seqid: '{}'".format(trna_seqid)
+		assert trna_type_match is not None, "\nError: not a recognized tRNA seqid: '{}'".format(trna_seqid)
 		trna_type = trna_type_match.group(2)
 		if trna_type in universal_tRNA_species:
 			trnaset.add(trna_type)
@@ -354,9 +354,9 @@ def hmmersearch(hmmsearch, model, query, outfilename, score_cutoff = None, eval_
 	elif score_cutoff == "moderate":
 		score_cutoff = ["--cut_ga"] # use gathering cutoff of hmm model (if available)
 	else:	
-		if eval_cutoff != None:
+		if eval_cutoff is not None:
 			eval_cutoff_arg = ["-E", eval_cutoff]
-		if score_cutoff != None:
+		if score_cutoff is not None:
 			score_cutoff_arg = ["-T", score_cutoff]
 	hmmsearch_cmd = [hmmsearch, "--noali", "--cpu", str(threads), "--domtblout", outfilename] + eval_cutoff_arg + score_cutoff_arg + [model]
 	if type(query) == str: #TODO: This assumes "if query is a string, it must be a filename." That is obviously BS! implement a check that tests if string is a fasta-record! #note to to self: for now i will assume fasta via stdin if query is a list of seqrecords 
@@ -545,11 +545,11 @@ def combine_multiple_fastas(infastalist, outfilename = None, delete_original = T
 	recordcount = 0
 	pattern = re.compile("_\d+$")
 	outrecordlist=[]
-	if outfilename != None:
+	if outfilename is not None:
 		outfile = openfile(outfilename, "wt")
 	for f in infastalist:
 		infile=openfile(f)
-		if outfilename != None:
+		if outfilename is not None:
 			for record in SeqIO.parse(infile, "fasta"):
 				recordcount += 1
 				markerdict[record.id] = {"stype": "total", "tax": None } #all proteins are by default set to type "total" at first. will be ssigned to markes after hmm-analyses later. possible markertypes=["total", "prok", "bac", "arc", "lsu", "ssu"] 
@@ -568,7 +568,7 @@ def combine_multiple_fastas(infastalist, outfilename = None, delete_original = T
 				contigdict[contigname]["totalprots"] += [record.id] #todo: if i understand python scopes correctly, te dictionary should be changed globally, even if not explicitely returned... check this!
 				contigdict[contigname]["totalprotcount"] += 1
 		infile.close()
-	if outfilename != None:
+	if outfilename is not None:
 		outfile.close()
 		output = outfilename
 	else:
@@ -587,7 +587,7 @@ def combine_multiple_fastas(infastalist, outfilename = None, delete_original = T
 def seqid2contig(seqid):
 	for pattern in [ _trnapattern, _barrnappattern, _rnammerpattern, _prodigalpattern ]:
 		pmatch = re.search(pattern, seqid)
-		if pmatch != None:
+		if pmatch is not None:
 			return pmatch.group(1)
 			
 def prodigalprot2contig(protid): #todo: probably obsolete. replace with above?
@@ -603,7 +603,7 @@ def parse_protmarkerdict(protmarkerdict, contigdict, protmarkerlevel, markerdict
 		contigname = prodigalprot2contig(protid)
 		markername = protmarkerdict[protid]["marker"]
 		contigdict[contigname][marker].append( protid)
-		if markerdict != None: 	
+		if markerdict is not None: 	
 			markerdict[protid]["stype"] = "{} {}".format(marker, markername) #stored as space seperated string with "<marker type> <marker_hmm>". should be split later to get only markertype# TODO: in case someone insists on using spaces in contignames/proteinIDS, maybe change delimintor to tab (\t)?
 	return contigdict
 
@@ -635,7 +635,7 @@ class gdata(object): #meant for gathering all contig/protein/marker info
 				bin_tempname = bin_tempname[:-len(suffix)]
 		self.outbasedir = outbasedir		
 		self.bin_tempname = bin_tempname
-		if outbasedir != None:
+		if outbasedir is not None:
 			self.bin_resultfolder = os.path.join(self.outbasedir, self.bin_tempname)
 			self.trnafastafile = os.path.join(self.bin_resultfolder, self.bin_tempname + "_tRNAs.fasta.gz")
 			self.totalprotsfile = os.path.join(self.bin_resultfolder, self.bin_tempname + "_totalprots.faa")
@@ -644,7 +644,7 @@ class gdata(object): #meant for gathering all contig/protein/marker info
 		assert len(bin_tempname) <= 176, "ERROR: input-filename may not be longer than 176 characters (sorry)!" #todo: qucik and dirty fix for a stupid problem: can't produce outputfiles with filenames longer than 256 chars. considering the longest pre- and suffixes, the limit is for 176 chars for the input-filename (without path or suffix). Better long-term solution: shorten output-filenames if necessary (but ensure that tehy are unique)!
 		self.trnadict = {}
 
-		if self.outbasedir != None:
+		if self.outbasedir is not None:
 			for d in [self.outbasedir, self.bin_resultfolder]:
 				try:
 					if not os.path.exists(d):
@@ -664,7 +664,7 @@ class gdata(object): #meant for gathering all contig/protein/marker info
 		outlist = []
 		for record in SeqIO.parse(openfile(self.binfastafile), "fasta"):
 			if record.id in contigset:
-				if self.contigdict[record.id]["toplevel_tax"] != None:
+				if self.contigdict[record.id]["toplevel_tax"] is not None:
 					taxid = self.contigdict[record.id]["toplevel_tax"][-1].taxid
 				else:
 					taxid = None
@@ -899,7 +899,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 	
 	def get_topleveltax(self, db):
 		def levels_difference(querytax, majortax): #querytax and majortax can be either taxtuplelists or majortaxdicts, doesnt matter
-			if topleveltax != None:
+			if topleveltax is not None:
 				if querytax is None:
 					return len(topleveltax)
 				if len(topleveltax) > len(querytax):
@@ -924,7 +924,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 			topleveltax = None
 			contiglen = self.contigdict[contig]["contiglen"]
 			for m in markerranking:
-				if self.contigdict[contig][m] != None:
+				if self.contigdict[contig][m] is not None:
 					if topleveltax is None:
 						topleveltax = self.contigdict[contig][m]
 						self.contigdict[contig]["toplevel_tax"] = topleveltax
@@ -933,15 +933,15 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 						self.contigdict[contig]["toplevel_taxlevel"] = lca.taxlevels[len(topleveltax)-1]
 					else:
 						contradiction, contradiction_evidence = lca.contradicting_taxasstuples(self.contigdict[contig][m], topleveltax, return_idents = True)
-						if contradiction != None:
+						if contradiction is not None:
 							self.contigdict[contig]["contradictions_interlevel"].append(contradiction_evidence[0])
-			if topleveltax != None: #mark viral contigs, in case theys should be considered specially later (cases were value remains at default "None" are not classified, therfore not sure if viral or not)
+			if topleveltax is not None: #mark viral contigs, in case theys should be considered specially later (cases were value remains at default "None" are not classified, therfore not sure if viral or not)
 				if db.is_viral(topleveltax[0].taxid):
 					self.contigdict[contig]["viral"] = True
 				else:
 					self.contigdict[contig]["viral"] = False		
 					
-			if topleveltax  != None:
+			if topleveltax  is not None:
 				for x in range(len(topleveltax)):
 					taxlevel = lca.taxlevels[x]
 					taxtuple = tuple(mt.taxid for mt in topleveltax[:x+1])
@@ -964,7 +964,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 						last_tax_entry = tempsorted[-1]
 						break
 		
-		if last_tax_entry != None:
+		if last_tax_entry is not None:
 			self.consensus_tax = db.taxid2taxpath(last_tax_entry[0][-1])
 		sys.stderr.write("\tmajority tax-path: {}\n".format("; ".join(self.get_consensus_taxstringlist())))
 		sys.stderr.write("\tcompleteness: {} (based on universally required types of tRNA)\n".format(self.completeness_before))
@@ -979,7 +979,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 		#return taxondict, majortaxdict 
 
 	def get_consensus_taxstringlist(self):
-		if self.consensus_tax != None:
+		if self.consensus_tax is not None:
 			return [ taxtuple[0] for taxtuple in self.consensus_tax ]
 		return ["None"]
 
@@ -1027,7 +1027,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 		if self.consensus_tax is None: # temporary workaround for cases in which NO contig yielded ANY blast-hits --> set trust to lower than those of unknown contigs/bins
 			return 4
 
-		consensus_taxlevel = [ key for key in self.majortaxdict.keys() if self.majortaxdict[key] != None][-1] #TODO: these should be instance attributes
+		consensus_taxlevel = [ key for key in self.majortaxdict.keys() if self.majortaxdict[key] is not None][-1] #TODO: these should be instance attributes
 		consensus_taxid = self.majortaxdict[consensus_taxlevel][0][-1] #TODO: these should be instance attributes
 		consensus_taxpath = db.taxid2taxpath(consensus_taxid)[1:] #root is skipped
 
@@ -1087,19 +1087,19 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 			# ~ if self.contigdict[contig]["viral"]:
 				# ~ self.contigdict["tax_note"] == "probably viral; " + self.contigdict["tax_note"]
 			for protmarker in ["prok_marker_tax", "totalprots_tax"]:
-				if self.contigdict[contig][protmarker] != None:
+				if self.contigdict[contig][protmarker] is not None:
 					if not lca.contradict_taxasstuple_majortaxdict(self.contigdict[contig][protmarker], self.majortaxdict):
 						if lca.contradicting_taxasstuples(self.contigdict[contig][protmarker], self.contigdict[contig]["toplevel_tax"]):
 							self.contigdict[contig]["info_flag"] = "refdb_ambig"
 							self.contigdict[contig]["refdb_ambig"] = "gtdb/silva database ambiguity"
 							self.contigdict[contig]["refdb_ambig_infotext"] +="ambigeous gtdb-taxon (taxonomy conflict on rRNA level, but not on protein level)"
-							self.contigdict[contig]["tax_note"] +=" but agrees with majority classification up to rank '{}' on {}-level --> ambigeous taxon placement".format(lca.taxlevels[min(len(self.contigdict[contig][protmarker]),  len([key for key in self.majortaxdict.keys() if self.majortaxdict[key] != None]))-1], protmarker)
+							self.contigdict[contig]["tax_note"] +=" but agrees with majority classification up to rank '{}' on {}-level --> ambigeous taxon placement".format(lca.taxlevels[min(len(self.contigdict[contig][protmarker]),  len([key for key in self.majortaxdict.keys() if self.majortaxdict[key] is not None]))-1], protmarker)
 							filterflag = altflag
 						elif len(self.contigdict[contig][protmarker]) > len(self.contigdict[contig]["toplevel_tax"]):
 							self.contigdict[contig]["info_flag"] = "unrepresented silva taxon/OTU"
 							self.contigdict[contig]["refdb_ambig"] = "unrepresented silva taxon/OTU"
 							self.contigdict[contig]["refdb_ambig_infotext"] += " unrepresented silva taxon/OTU"
-							taxrank_index = min(len(self.contigdict[contig][protmarker]),  len([key for key in self.majortaxdict.keys() if self.majortaxdict[key] != None]))-1
+							taxrank_index = min(len(self.contigdict[contig][protmarker]),  len([key for key in self.majortaxdict.keys() if self.majortaxdict[key] is not None]))-1
 							self.contigdict[contig]["tax_note"] +=" but agrees with majority classification up to rank '{}' ({:.2f}% av.ident.) on {}-level --> unrepresented silva taxon/OTU".format(lca.taxlevels[taxrank_index], self.contigdict[contig][protmarker][taxrank_index].average_ident, protmarker)
 							filterflag = altflag
 					break #only check the highest ranking protein-annotation...
@@ -1161,7 +1161,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 			self.contigdict[contig]["refdb_ambig_infotext"] = ambiguityinfo["amb_infotext"]
 			self.contigdict[contig]["refdb_ambig_evidence"] = ambiguityinfo["amb_evidence"]
 			# ~ print(ambiguityinfo["amb_type"])
-			if (not fast_run) and ambiguityinfo["amb_type"] and re.search(review_refdbcontams.sm_contam_pattern, ambiguityinfo["amb_type"]) != None:
+			if (not fast_run) and ambiguityinfo["amb_type"] and re.search(review_refdbcontams.sm_contam_pattern, ambiguityinfo["amb_type"]) is not None:
 				sys.stderr.write("\r\t finished {:.0f}%. Currently analysing apparent reference database ambiguity".format(progress))
 				db_suspects.parse_evidence(ambiguityinfo["amb_evidence"], self.contigdict[contig]["toplevel_marker"])
 				# ~ print(contig)
@@ -1208,7 +1208,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 							self.ref_db_ambiguity_overview[contig] = ambiguityinfo			
 						blastobj.filter_blacklist(db_suspects.blacklist_additions) # remove newly detected db-contaminations from blastlines (based on only the newly detected blacklist-entries...)
 						self.add_lca2markerdict(blastdata=blastobj, db=db, contig=contig, verbose=False) ## reclassify proteins with strict LCA
-						newtaxlist = [self.markerdict[x]["tax"] for x in self.contigdict[contig][markerlevel.replace("_tax","")] if self.markerdict[x]["tax"] != None]
+						newtaxlist = [self.markerdict[x]["tax"] for x in self.contigdict[contig][markerlevel.replace("_tax","")] if self.markerdict[x]["tax"] is not None]
 						self.contigdict[contig][markerlevel] = lca.weighted_lca(db, contig, newtaxlist, taxlevel=markerlevel) ## reclassify contig with weighted LCA
 						step1() ## re-evaluate contig
 						is_potential_refdb_contam = step2() ## re-evaluate refDB-ambiguity...
@@ -1260,7 +1260,7 @@ class bindata(gdata): #meant for gathering all contig/protein/marker info
 			totalprotcount = self.contigdict[contig]["totalprotcount"]
 			rRNAcount = len(self.contigdict[contig]["ssu_rRNA"]) + len(self.contigdict[contig]["lsu_rRNA"])
 			markerprotcount = len(self.contigdict[contig]["prok_marker"]) + len(self.contigdict[contig]["bac_marker"]) + len(self.contigdict[contig]["arc_marker"]) 
-			if self.contigdict[contig]["toplevel_tax"] != None:
+			if self.contigdict[contig]["toplevel_tax"] is not None:
 				toptaxid = self.contigdict[contig]["toplevel_tax"][-1].taxid
 				toptaxevidence = self.contigdict[contig]["toplevel_tax"][-1].average_ident #todo: the name of that field should change when i use uniform taxassignment named-tuples
 				toptaxambigeous = self.contigdict[contig]["toplevel_tax"][-1].ambigeous#todo: the name of that field should change when i use uniform taxassignment named-tuples
