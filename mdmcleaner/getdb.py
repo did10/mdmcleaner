@@ -28,15 +28,15 @@ things to consider:
 # TODO: change all stderr messages to logger statements!!! make verbosity adjustable!!!
 # TODO: add flags specifying progress, for better being able to resume where it last stopped
 
-rank2index = { "no rank" : 0, \
-				"superkingdom" : 10, \
-				"phylum" : 20, \
-				"class" : 30, \
-				"order" : 40, \
-				"family" : 50, \
-				"genus" : 60, \
-				"species" : 70, \
-				"ignored rank" : -1} # using increments of 10 in case i want to use the indermediate ranks (e.g. subfamily) at some later point also
+rank2index = { "no rank" : 0,
+			   "superkingdom" : 10,
+			   "phylum" : 20,
+			   "class" : 30,
+			   "order" : 40,
+			   "family" : 50,
+			   "genus" : 60,
+			   "species" : 70,
+			   "ignored rank" : -1} # using increments of 10 in case i want to use the indermediate ranks (e.g. subfamily) at some later point also
 				#rank "root" does not exist (as previously planned. Instead checking for taxid=1 (= root)
 				#todo: conflicting naming scheme "superkingdom"  and "domain". Fix this!
 				#todo: switched order of keys (moved "ignored rank" from second, to last position). Keep an eye out on whether this breaks something somewehere(although relying on exact key-order in dicts WOULD be DUMB!)!
@@ -46,17 +46,17 @@ index2rank = { rank2index[key] : key for key in rank2index }
 #todo: split gtdb protblastdbs into several subdbs that can be blasted in parallel (check out if faster first)
 #todo: find common names for gtdb and ncbi dbs to simplify things
 #todo: find actual names for ncbi dbs
-dbfiles = { "gtdb" : {	"protblastdbs" : ["gtdbplus_protdb.dmnd"], \
-						"nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_SSURef_NR99_tax_silva", "SILVA_138.1_LSURef_NR99_tax_silva"] ,\
-						"ssu_nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_SSURef_NR99_tax_silva"], \
-						"lsu_nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_LSURef_NR99_tax_silva"], \
-						"genome_nucblastdbs" : ["concat_refgenomes"], \
-						"mdmdbs" : ["gtdb_all.accession2taxid.sorted", "gtdb_taxonomy_br.json.gz", "gtdb_lcawalkdb_br.db"] },\
-			"ncbi" : {  "protblastdbs" : ["nr"], \
-						"nucblastdbs" : ["nt"], \
-						"ssu_nucblastdbs" : ["nt"], \
-						"lsu_nucblastdbs" : ["nt"], \
-						"genome_nucblastdbs" : ["nt"], \
+dbfiles = { "gtdb" : {	"protblastdbs" : ["gtdbplus_protdb.dmnd"],
+						  "nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_SSURef_NR99_tax_silva", "SILVA_138.1_LSURef_NR99_tax_silva"] ,
+						  "ssu_nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_SSURef_NR99_tax_silva"],
+						  "lsu_nucblastdbs" : ["concat_refgenomes", "SILVA_138.1_LSURef_NR99_tax_silva"],
+						  "genome_nucblastdbs" : ["concat_refgenomes"],
+						  "mdmdbs" : ["gtdb_all.accession2taxid.sorted", "gtdb_taxonomy_br.json.gz", "gtdb_lcawalkdb_br.db"] },\
+			"ncbi" : {  "protblastdbs" : ["nr"],
+						"nucblastdbs" : ["nt"],
+						"ssu_nucblastdbs" : ["nt"],
+						"lsu_nucblastdbs" : ["nt"],
+						"genome_nucblastdbs" : ["nt"],
 						"mdmdbs" : [ "ncbi_accession2taxid", "ncbi_taxonomy_br.json.gz", "ncbi_lcawalkdb_br.db"] } }
 
 
