@@ -113,7 +113,7 @@ def weighted_lca(taxdb, seqid = None, blasthitlist=None, fractioncutoff = 0.95, 
 	It is not trecommended to use this function for a cutoff of 1 (strict lca)! For strict lca, please use the function "strict_lca" instead, which should be much faster!
 	"""
 	top2_contras, top2_contras_avidents, top2_contras_avscores  = None, None, None
-	assert fractioncutoff >= 0.5 and fractioncutoff <=1, "\nError: rangecutoff {} not within allowed range (0.5-1.0)!\n"
+	assert 0.5 <= fractioncutoff <= 1, "\nError: rangecutoff {} not within allowed range (0.5-1.0)!\n"
 	if fractioncutoff == 1:
 		sys.stderr.write("\nWARNING: it is NOT recommended to use 'weighted_lca' with a fractioncutoff of 1! Try using 'strict_lca' instead!\n")
 	#create tempdict
